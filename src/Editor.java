@@ -9,84 +9,77 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import javax.swing.text.html.HTMLDocument.RunElement;
+
 import javafx.application.Application;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 public class Editor {
-    String textData;
+    private String textData;
 
     public Editor () {
 
     }
 
     public void newOption() {
-        if ("".equals(TiaEditor.textArea.getText())) // if text area's empty then clear 
-            TiaEditor.textArea.clear();
-        // else // in case text area's not empty then
-             //check if saved or nah? by text file == text area ? 
-             //case true: clear the text area
-             //case false: warning to save first 
+        TiaEditor.textArea.clear();
+        TiaEditor.textFile = null;
+        TiaEditor.mainStage.setTitle("Untiltle*" + "- Tia Editor");
+
     }
 
     public void openOption() {
-        // if ("".equals(TiaEditor.textArea.getText()))
-            //open it 
-    //    else // in case text area's not empty then
-               // check if saved or nah? by text file == text area ? 
-               // case true: Open the text file  
-               // case false: warning to save first
         TiaEditor.fChooser.setTitle("Open");
         TiaEditor.textFile = TiaEditor.fChooser.showOpenDialog(TiaEditor.mainStage); 
-        
-        if (TiaEditor.textFile != null) {
-
-            try {
-                byte[] readText = Files.readAllBytes(Paths.get(TiaEditor.textFile.getAbsolutePath())); 
-                textData = new String(readText);
-                TiaEditor.textArea.setText(textData);
-
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-        } 
-            
-        else    
-            TiaEditor.textArea.setText("unselected");
+        TiaEditor.textArea.setText(readAfile(TiaEditor.textFile));
+        TiaEditor.mainStage.setTitle(TiaEditor.textFile.getName() + "- Tia Editor");
     }
 
     public void saveOption() {
-        // check if the file's from open option or already have a file as a same path
-        // case true: then save the file
-        // case false: involve saveAsOption
-            try (BufferedWriter bWriter = new BufferedWriter(new FileWriter(TiaEditor.textFile))) {
-                bWriter.write(TiaEditor.textArea.getText());
-    
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        
-        
+        writeAfile(TiaEditor.textFile);
     }
 
     public void saveAsOption() {
-        // save the file that can select the path by fileChooser
         TiaEditor.fChooser.setTitle("Save as");
         TiaEditor.textFile = TiaEditor.fChooser.showSaveDialog(TiaEditor.mainStage);
 
-        try (BufferedWriter bWriter = new BufferedWriter(new FileWriter(TiaEditor.textFile))) {
-            bWriter.write(TiaEditor.textArea.getText());
+        writeAfile(TiaEditor.textFile); 
+    }
+
+    public String readAfile(File file) {
+        
+        try {
+            byte[] readText = Files.readAllBytes(Paths.get(file.getAbsolutePath())); 
+            textData = new String(readText);
+            return textData;
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-
+        return textData;
     }
 
+    public void writeAfile(File file) {
+        try (BufferedWriter bWriter = new BufferedWriter(new FileWriter(file))) {
+            bWriter.write(TiaEditor.textArea.getText());
 
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void alertToUser(AlertType alertType, String contentText) {
+        TiaEditor.userAlert.setAlertType(alertType);
+        TiaEditor.userAlert.setContentText(contentText);
+        // TiaEditor.userAlert.setHeaderText();
+        TiaEditor.userAlert.show();
+    }
+
+    public String getTextData() {
+        return textData;
+    }
 }
