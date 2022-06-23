@@ -47,23 +47,25 @@ public class TiaEditor extends Application {
             fileMenu.getItems().add(addMenuItem);
             addMenuItem.setOnAction(e-> {
                 if ("New".equals(addMenuItem.getText())) {
-                    if ("".equals(textArea.getText()) || textArea.getText().equals(editor.readAfile(textFile))) {
-                        editor.newOption();
-                    }
-                    else {
-                        //alert if user wanna save or no
-                        editor.alertToUser(AlertType.WARNING, "save first");
-                    }
+                    editor.newOption();
+                    // if ("".equals(textArea.getText()) || textArea.getText().equals(editor.readAfile(textFile))) {
+                    //     editor.newOption();
+                    // }
+                    // else {
+                    //     //alert if user wanna save or no
+                    //     editor.alertToUser(AlertType.WARNING, "save first");
+                    // }
                 }
                 else if ("Open".equals(addMenuItem.getText())) {
-                    if ("".equals(textArea.getText()) || textArea.getText().equals(editor.readAfile(textFile))) {
-                        editor.openOption();
-                    }
-                    else {
-                        //alert if user wanna save or no
-                        editor.alertToUser(AlertType.WARNING, "save first");
+                    editor.openOption();
+                    // if ("".equals(textArea.getText()) || textArea.getText().equals(editor.readAfile(textFile))) {
+                    //     editor.openOption();
+                    // }
+                    // else {
+                    //     //alert if user wanna save or no
+                    //     editor.alertToUser(AlertType.WARNING, "save first");
                         
-                    }
+                    // }
                 }
                 else if ("Save".equals(addMenuItem.getText())) {
                     if (textFile.exists())
