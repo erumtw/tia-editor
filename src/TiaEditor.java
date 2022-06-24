@@ -15,17 +15,21 @@ import javafx.stage.Stage;
 
 
 public class TiaEditor extends Application {
-    protected Editor editor = new Editor();
     protected static File textFile;
-    protected static Alert userAlert = new Alert(AlertType.NONE);
+    protected static Alert userAlert = new Alert(AlertType.CONFIRMATION);
     protected static TextArea textArea = new TextArea();
-    protected static FileChooser fChooser = new FileChooser();
     protected static String filePathString;
     protected static Stage mainStage;
     private double initialHeight = 500;
     private double initialWidth = 700;
+    protected static FileChooser fChooser = new FileChooser();
+    private FileChooser.ExtensionFilter eFilter = new FileChooser.ExtensionFilter("Text documents (*.txt)", "*.txt");
+    private Editor editor = new Editor();
+    
+    
     public static void main(String[] args) throws Exception {
         launch(args);
+        
     }
 
     @Override
@@ -33,8 +37,9 @@ public class TiaEditor extends Application {
         
         MenuBar menuBar = new MenuBar();
         Menu fileMenu = new Menu("File");
-        
-        fChooser.setInitialFileName(".txt");
+        fChooser.getExtensionFilters().add(eFilter);
+        fChooser.setInitialFileName("*.txt");
+
         String[] fileOption = {
             "New",
             "Open",
@@ -51,18 +56,19 @@ public class TiaEditor extends Application {
                         editor.newOption();
                     }
                     else {
-                        if (textFile.exists()) {
+                        if (textFile != null) {
                             if (textArea.getText().equals(editor.getTextData())) {
                                 editor.newOption();
                             }
                             else {
                                 //ask for save
-                                editor.alertToUser(AlertType.CONFIRMATION, "Do you want to save changes");
+                                editor.alertForChanges(editor.NEW);
                             }
                         }
                         else {
                             //ask for save
-                            editor.alertToUser(AlertType.CONFIRMATION, "Do you want to save changes");
+                            editor.alertForChanges(editor.OPEN);
+                            
                         }
                     }
                 }
@@ -71,24 +77,24 @@ public class TiaEditor extends Application {
                         editor.openOption();
                     }
                     else {
-                        if (textFile.exists()) {
+                        if (textFile != null) {
                             if (textArea.getText().equals(editor.getTextData())) {
                                 editor.openOption();
                             }
                             else {
                                 //ask for save
-                                editor.alertToUser(AlertType.CONFIRMATION, "Do you want to save changes");
+                                editor.alertForChanges(editor.OPEN);
                             }
                         }
                         else {
                             //ask for save
-                            editor.alertToUser(AlertType.CONFIRMATION, "Do you want to save changes");
+                            editor.alertForChanges(editor.OPEN);
                         }
                     }
                     
                 }
                 else if ("Save".equals(addMenuItem.getText())) { // set action for Save option
-                    if (textFile.exists())
+                    if (textFile != null)
                         editor.saveOption();
                     else 
                         editor.saveAsOption();

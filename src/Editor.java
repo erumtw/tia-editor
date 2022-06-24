@@ -1,16 +1,22 @@
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Optional;
 
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 
 
 public class Editor {
     private String textData;
+    
+    protected final String NEW = "NEW";
+    protected final String OPEN = "OPEN";
+    protected final String SAVE = "SAVE";
+    protected final String SAVE_AS = "SAVE AS"; 
 
     public Editor () {
 
@@ -19,19 +25,29 @@ public class Editor {
     public void newOption() {
         TiaEditor.textArea.clear();
         TiaEditor.textFile = null;
-        TiaEditor.mainStage.setTitle("Untiltle*" + "- Tia Editor");
+        // TiaEditor.mainStage.setTitle("Untiltle*" + "- Tia Editor");
 
     }
 
     public void openOption() {
         TiaEditor.fChooser.setTitle("Open");
-        TiaEditor.textFile = TiaEditor.fChooser.showOpenDialog(TiaEditor.mainStage); 
+        File fileChoosed = TiaEditor.fChooser.showOpenDialog(TiaEditor.mainStage); 
+
+        if (fileChoosed != null && fileChoosed.getName().contains(".txt")) {
+            TiaEditor.textFile = fileChoosed;
+            // TiaEditor.mainStage.setTitle(TiaEditor.textFile.getName() + "- Tia Editor");
+        }
+        else if (fileChoosed.getName().contains(".txt") == false){
+            warnUser("Invalid File, Must be only txt files");
+        }
         TiaEditor.textArea.setText(readAfile(TiaEditor.textFile));
         TiaEditor.mainStage.setTitle(TiaEditor.textFile.getName() + "- Tia Editor");
     }
 
     public void saveOption() {
+        
         writeAfile(TiaEditor.textFile);
+        readAfile(TiaEditor.textFile);
     }
 
     public void saveAsOption() {
@@ -39,6 +55,7 @@ public class Editor {
         TiaEditor.textFile = TiaEditor.fChooser.showSaveDialog(TiaEditor.mainStage);
 
         writeAfile(TiaEditor.textFile); 
+        readAfile(TiaEditor.textFile);
     }
 
     public String readAfile(File file) {
@@ -66,11 +83,36 @@ public class Editor {
         }
     }
 
-    public void alertToUser(AlertType alertType, String contentText) {
-        TiaEditor.userAlert.setAlertType(alertType);
-        TiaEditor.userAlert.setContentText(contentText);
-        // TiaEditor.userAlert.setHeaderText();
-        TiaEditor.userAlert.show();
+    public void alertForChanges(String anOption) {
+        TiaEditor.userAlert.setAlertType(AlertType.CONFIRMATION);
+        TiaEditor.userAlert.setContentText("Do you want to save for changes");
+        Optional<ButtonType> result = TiaEditor.userAlert.showAndWait();
+
+        if (result.get() == ButtonType.OK) {
+            //save or save as
+            if (TiaEditor.textFile != null)
+                saveOption();
+            else 
+                saveAsOption();
+        }
+        else {
+            switch (anOption) {
+                case NEW:
+                    newOption();
+                    break;
+                case OPEN:
+                    openOption();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public void warnUser(String warnContent) {
+        TiaEditor.userAlert.setAlertType(AlertType.WARNING);
+        TiaEditor.userAlert.setContentText(warnContent);
+        TiaEditor.userAlert.showAndWait();
     }
 
     public String getTextData() {
