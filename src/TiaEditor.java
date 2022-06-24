@@ -46,34 +46,54 @@ public class TiaEditor extends Application {
             MenuItem addMenuItem = new MenuItem(string);
             fileMenu.getItems().add(addMenuItem);
             addMenuItem.setOnAction(e-> {
-                if ("New".equals(addMenuItem.getText())) {
-                    editor.newOption();
-                    // if ("".equals(textArea.getText()) || textArea.getText().equals(editor.readAfile(textFile))) {
-                    //     editor.newOption();
-                    // }
-                    // else {
-                    //     //alert if user wanna save or no
-                    //     editor.alertToUser(AlertType.WARNING, "save first");
-                    // }
+                if ("New".equals(addMenuItem.getText())) { // set action for New Option
+                    if ("".equals(textArea.getText())) {
+                        editor.newOption();
+                    }
+                    else {
+                        if (textFile.exists()) {
+                            if (textArea.getText().equals(editor.getTextData())) {
+                                editor.newOption();
+                            }
+                            else {
+                                //ask for save
+                                editor.alertToUser(AlertType.CONFIRMATION, "Do you want to save changes");
+                            }
+                        }
+                        else {
+                            //ask for save
+                            editor.alertToUser(AlertType.CONFIRMATION, "Do you want to save changes");
+                        }
+                    }
                 }
-                else if ("Open".equals(addMenuItem.getText())) {
-                    editor.openOption();
-                    // if ("".equals(textArea.getText()) || textArea.getText().equals(editor.readAfile(textFile))) {
-                    //     editor.openOption();
-                    // }
-                    // else {
-                    //     //alert if user wanna save or no
-                    //     editor.alertToUser(AlertType.WARNING, "save first");
-                        
-                    // }
+                else if ("Open".equals(addMenuItem.getText())) { // set action for Open option
+                    if ("".equals(textArea.getText())){
+                        editor.openOption();
+                    }
+                    else {
+                        if (textFile.exists()) {
+                            if (textArea.getText().equals(editor.getTextData())) {
+                                editor.openOption();
+                            }
+                            else {
+                                //ask for save
+                                editor.alertToUser(AlertType.CONFIRMATION, "Do you want to save changes");
+                            }
+                        }
+                        else {
+                            //ask for save
+                            editor.alertToUser(AlertType.CONFIRMATION, "Do you want to save changes");
+                        }
+                    }
+                    
                 }
-                else if ("Save".equals(addMenuItem.getText())) {
+                else if ("Save".equals(addMenuItem.getText())) { // set action for Save option
                     if (textFile.exists())
                         editor.saveOption();
                     else 
                         editor.saveAsOption();
                 }
-                else{
+                else{ // set action for Save as option
                     editor.saveAsOption();
                 }
             });

@@ -1,19 +1,13 @@
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import javax.swing.text.html.HTMLDocument.RunElement;
-
-import javafx.application.Application;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Stage;
+
 
 public class Editor {
     private String textData;
